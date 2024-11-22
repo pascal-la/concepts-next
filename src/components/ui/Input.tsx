@@ -1,7 +1,7 @@
 import { createElement } from "react";
 import { twMerge } from "tailwind-merge";
 
-import { InputProps } from "@/lib/types";
+import { InputProps, InputWithLabelProps } from "@/lib/types";
 
 const Input = ({ type = "text", className, rows, ...props }: InputProps) => {
   const isTextArea = type === "textarea";
@@ -19,4 +19,26 @@ const Input = ({ type = "text", className, rows, ...props }: InputProps) => {
   return input;
 };
 
-export default Input;
+const InputWithLabel = ({
+  label,
+  labelClassName,
+  inputClassName,
+  ...props
+}: InputWithLabelProps) => {
+  return (
+    <fieldset className="grid gap-1">
+      <label
+        htmlFor={props.id}
+        className={twMerge(
+          "block text-sm/6 font-medium text-gray-900",
+          labelClassName
+        )}
+      >
+        {label}
+      </label>
+      <Input {...props} className={inputClassName} />
+    </fieldset>
+  );
+};
+
+export { Input, InputWithLabel };

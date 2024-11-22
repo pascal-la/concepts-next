@@ -1,14 +1,17 @@
 "use client";
 
-import { SubmitHandler, useForm } from "react-hook-form";
+import { useState } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { SubmitHandler, useForm } from "react-hook-form";
 import { z } from "zod";
 
 import { InputWithLabelProps } from "@/lib/types";
 
-import Button from "@/components/Button";
-import InputWithLabel from "@/components/input/InputWithLabel";
-import PageTitle from "@/components/PageTitle";
+import Button from "@/components/ui/Button";
+import { Card, CardDescription, CardTitle } from "@/components/ui/Card";
+import { InputWithLabel } from "@/components/ui/Input";
+import { Modal } from "@/components/ui/Modal";
+import PageTitle from "@/components/ui/PageTitle";
 
 const MESSAGE_MAX_LENGTH = 10;
 
@@ -29,12 +32,39 @@ const contactForm = z.object({
 
 type TContactForm = z.infer<typeof contactForm>;
 
+const inputs: InputWithLabelProps[] = [
+  {
+    label: "Nom d'utilisateur",
+    name: "username",
+    id: "username",
+    placeholder: "Entrez votre pseudo",
+  },
+  {
+    label: "E-mail",
+    type: "email",
+    name: "email",
+    id: "email",
+    placeholder: "Entrez votre e-mail",
+  },
+  {
+    label: "Message",
+    type: "textarea",
+    name: "message",
+    id: "message",
+    placeholder: "Tapez votre message",
+    rows: 5,
+    // maxLength: MESSAGE_MAX_LENGTH,
+  },
+];
+
 const Contact = () => {
   const {
     register,
     handleSubmit,
     formState: { errors, isSubmitting },
   } = useForm<TContactForm>({ resolver: zodResolver(contactForm) });
+
+  const [openModal, setOpenModal] = useState(false);
 
   // const onSubmit: SubmitHandler<TContactForm> = async (data) => {
   //   try {
@@ -57,35 +87,18 @@ const Contact = () => {
     console.log("Success", data);
   };
 
-  const inputs: InputWithLabelProps[] = [
-    {
-      label: "Nom d'utilisateur",
-      name: "username",
-      id: "username",
-      placeholder: "Entrez votre pseudo",
-    },
-    {
-      label: "E-mail",
-      type: "email",
-      name: "email",
-      id: "email",
-      placeholder: "Entrez votre e-mail",
-    },
-    {
-      label: "Message",
-      type: "textarea",
-      name: "message",
-      id: "message",
-      placeholder: "Tapez votre message",
-      rows: 5,
-      // maxLength: MESSAGE_MAX_LENGTH,
-    },
-  ];
-
   return (
     <div className="container p-2 mx-auto mt-3 grid gap-12">
+      {openModal && <Modal>STRIP</Modal>}
       <PageTitle text="Contact" />
-      <div className="mx-auto max-w-xl w-full px-4 py-6 sm:p-12 bg-slate-100 border rounded-md">
+      <Card className="grid gap-6">
+        <div>
+          <CardTitle>Heart attack</CardTitle>
+          <CardDescription>Worst pain that I ever had</CardDescription>
+          <Button className="mt-2" onClick={() => setOpenModal(true)}>
+            Banana
+          </Button>
+        </div>
         <form onSubmit={handleSubmit(onSubmit)} className="grid gap-5">
           {inputs.map((input, i) => {
             const errorId = `${input.id}-error`;
@@ -119,7 +132,7 @@ const Contact = () => {
             {isSubmitting ? "Envoi en cours..." : "Valider"}
           </Button>
         </form>
-      </div>
+      </Card>
     </div>
   );
 };

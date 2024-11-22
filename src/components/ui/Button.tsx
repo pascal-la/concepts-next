@@ -1,13 +1,11 @@
-import { ReactNode } from "react";
+import { ButtonHTMLAttributes, PropsWithChildren } from "react";
 import { twMerge } from "tailwind-merge";
 
 type ButtonProps = {
-  type: "submit" | "reset" | "button";
+  type?: "submit" | "reset" | "button";
   variant?: "primary" | "secondary" | "third";
   className?: string;
-  children: ReactNode;
-  disabled?: boolean;
-};
+} & ButtonHTMLAttributes<HTMLButtonElement>;
 
 const buttonVariant = {
   primary:
@@ -23,8 +21,8 @@ const Button = ({
   variant = "primary",
   className,
   children,
-  disabled,
-}: ButtonProps) => {
+  ...props
+}: PropsWithChildren<ButtonProps>) => {
   return (
     <button
       type={type}
@@ -33,7 +31,7 @@ const Button = ({
         buttonVariant[variant],
         className
       )}
-      disabled={disabled}
+      {...props}
     >
       {children}
     </button>
